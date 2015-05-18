@@ -71,12 +71,12 @@
 #define MSM_SHARED_RAM_SIZE   SZ_1M
 
 #if defined(CONFIG_ZTE_PLATFORM) && defined(CONFIG_F3_LOG)
-/* ZTE_F3LOG_YYM_0804 begin */
+/*  begin */
 #define MSM_RAM_LOG_BASE      IOMEM(0xFB000000)
 #define MSM_RAM_LOG_SIZE   	  SZ_1M
 #define MSM_SDLOG_RAM_PHYS    0x08D00000
 #define MSM_SDLOG_RAM_SIZE    0x100000
-/* ZTE_F3LOG_YYM_0804 end */
+/*  end */
 #endif
 #define MSM_UART1_PHYS        0xA9A00000
 #define MSM_UART1_SIZE        SZ_4K

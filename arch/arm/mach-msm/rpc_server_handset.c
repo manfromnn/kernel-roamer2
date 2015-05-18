@@ -11,11 +11,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-/*************************************************************************************************
- *   when      who    what, where, why
- * --------    ---    --------------------------------------------------------
- * 20111025   yangxs  add No-MIC headset support                      ZTE_AUDIO_YXS_20111025
- ************************************************************************************************/
+
+
+
 #include <linux/slab.h>
 #include <linux/module.h>
 #include <linux/kernel.h>
@@ -59,15 +57,15 @@
 
 #define SW_HEADPHONE_INSERT_W_MIC 1 /* HS with mic */
 
-//zhengchao add ZTE_HS_ZHENGCHAO_01
+
 #ifdef CONFIG_ZTE_PLATFORM
 #define HS_EXT_PWR_ON_K         0x78    /* External power was turned on        0x78    */
 #define HS_EXT_PWR_OFF_K        0x79    /* External power was turned off       0x79    */
 #endif
-//zhengchao add end
 
-/* ZTE_AUDIO_YXS_20111025, start */
-#if 1 // def ZTE_FEATURE_HEADPHONE
+
+
+#if 1 
 #include <linux/time.h>
 #include <asm/uaccess.h>
 #include <linux/proc_fs.h>
@@ -85,7 +83,7 @@ static hs_type_t hs_type = HS_NO_HEADSET;
 static void input_report_hph_event(struct work_struct *work);
 static bool hs_is_true_mic_event(void);
 #endif
-/* ZTE_AUDIO_YXS_20111025, end */
+
 
 #define KEY(hs_key, input_key) ((hs_key << 24) | input_key)
 
@@ -215,7 +213,7 @@ struct hs_cmd_data_type {
 
 static const uint32_t hs_key_map[] = {
 #ifdef CONFIG_ZTE_PLATFORM
-	KEY(HS_END_K, KEY_POWER),//ZTE_KEYMAP_ZX_001 KEY_END-->KEY_SLEEP 142 200911178
+	KEY(HS_END_K, KEY_POWER),// KEY_END-->KEY_SLEEP 142 
 #else
 	KEY(HS_PWR_K, KEY_POWER),
 	KEY(HS_END_K, KEY_END),
@@ -227,8 +225,8 @@ static const uint32_t hs_key_map[] = {
 	KEY(HS_HEADSET_SWITCH_2_K, KEY_VOLUMEUP),
 	KEY(HS_HEADSET_SWITCH_3_K, KEY_VOLUMEDOWN),
 #ifdef CONFIG_ZTE_PLATFORM
-	KEY(HS_EXT_PWR_ON_K,KEY_WAKEUP),//ZTE_HS_ZHENGCHAO_01
-  KEY(HS_EXT_PWR_OFF_K,KEY_WAKEUP),//ZTE_HS_ZHENGCHAO_01
+	KEY(HS_EXT_PWR_ON_K,KEY_WAKEUP),
+  KEY(HS_EXT_PWR_OFF_K,KEY_WAKEUP),
 #endif
 	0
 };
@@ -260,18 +258,18 @@ struct msm_handset {
 	struct msm_handset_platform_data *hs_pdata;
 	bool mic_on, hs_on;
 
-	/* ZTE_AUDIO_YXS_20111025, start */
-	#if 1 // def ZTE_FEATURE_HEADPHONE
+	/*  start */
+	#if 1  
 	struct delayed_work hph_wq; /* Workqueue to send headset insert event */
 	#endif
-	/* ZTE_AUDIO_YXS_20111025,end */
+	/* end */
 };
 
 static struct msm_rpc_client *rpc_client;
 static struct msm_handset *hs;
 
 
-extern void msm_batt_force_update(void);//ZTE_HS_ZHENGCHAO_01
+extern void msm_batt_force_update(void);
 
 static int hs_find_key(uint32_t hscode)
 {
@@ -313,8 +311,8 @@ static void update_state(void)
  * key-press = (key_code, 0)
  * key-release = (key_code, 0xff)
  */
-/* ZTE_AUDIO_YXS_20111025, start */
-#if 1 // def ZTE_FEATURE_HEADPHONE
+/*  start */
+#if 1  
 static void input_report_hph_event(struct work_struct *work)
 {
 	hs->mic_on = hs->hs_on = 1;
@@ -368,7 +366,7 @@ static int hs_read(char *page, char **start, off_t off, int count, int *eof, voi
     return ret;
 }
 #endif
-/* ZTE_AUDIO_YXS_20111025, end */
+/* end */
 
 static void report_hs_key(uint32_t key_code, uint32_t key_parm)
 {
@@ -394,7 +392,7 @@ static void report_hs_key(uint32_t key_code, uint32_t key_parm)
 	switch (key) {
 	case KEY_POWER:
 #ifdef CONFIG_ZTE_PLATFORM
-	case KEY_SLEEP://ZTE_KEYMAP_ZX_001 KEY_END-->KEY_SLEEP 142 200911178
+	case KEY_SLEEP:// KEY_END-->KEY_SLEEP 142 
 #else	
 	case KEY_END:
 #endif
@@ -405,9 +403,9 @@ static void report_hs_key(uint32_t key_code, uint32_t key_parm)
 		break;
 
 	case KEY_MEDIA:
-		/* ZTE_AUDIO_YXS_20111025, start */
-		#if 1 // def ZTE_FEATURE_HEADPHONE
-		if (HS_NO_HEADSET == hs_type) { /* ZTE_AUDIO_YXS_CHECKMIC */
+		/*  start */
+		#if 1 // def 
+		if (HS_NO_HEADSET == hs_type) { /*  */
 			//printk("Headphone or No Headset, It should have no MIC Event");
 			printk(KERN_ERR"[YXS]No Headset, It should have no MIC Event");
 			return;
@@ -421,20 +419,20 @@ static void report_hs_key(uint32_t key_code, uint32_t key_parm)
 			}
 		}
 		#endif
-		/* ZTE_AUDIO_YXS_20111025, end */
+		/* end */
 
 		input_report_key(hs->ipdev, key, (key_code != HS_REL_K));
 		break;
 
 #ifdef CONFIG_ZTE_PLATFORM
-case KEY_WAKEUP://ZTE_HS_ZHENGCHAO_01
+case KEY_WAKEUP:
 		printk(KERN_ERR "--keycode from A9(charger)\n \tkey:%d keycode:%d\n",key,key_code);
     		msm_batt_force_update();
 		break;
 #endif
 	case SW_HEADPHONE_INSERT_W_MIC:
-		/* ZTE_AUDIO_YXS_20111025, start */
-		#if 1 // def ZTE_FEATURE_HEADPHONE
+		/*  start */
+		#if 1  
 		if (key_parm == HS_REL_K) { /* Headset is removed, del timer and report immediately */
 			hs_type = HS_NO_HEADSET;
 
@@ -454,7 +452,7 @@ case KEY_WAKEUP://ZTE_HS_ZHENGCHAO_01
 
 			schedule_delayed_work(&hs->hph_wq, msecs_to_jiffies(910)); /* 910ms */
 		}
-		#else /* ZTE_FEATURE_HEADPHONE */
+		#else /*  */
 		hs->mic_on = hs->hs_on = (key_code != HS_REL_K) ? 1 : 0;
 		input_report_switch(hs->ipdev, SW_HEADPHONE_INSERT,
 							hs->hs_on);
@@ -462,7 +460,7 @@ case KEY_WAKEUP://ZTE_HS_ZHENGCHAO_01
 							hs->mic_on);
 		update_state();
 		#endif
-		/* ZTE_AUDIO_YXS_20111025, end */
+		/* end */
 		break;
 
 	case SW_HEADPHONE_INSERT:
@@ -772,11 +770,11 @@ static int __devinit hs_probe(struct platform_device *pdev)
 {
 	int rc = 0;
 	struct input_dev *ipdev;
-	/* ZTE_AUDIO_YXS_20111025, start */
-	#if 1 // def ZTE_FEATURE_HEADPHONE
+	/*  start */
+	#if 1  
 	struct proc_dir_entry *proc_hs_type;
 	#endif
-	/* ZTE_AUDIO_YXS_20111025, end */
+	/*  end */
 
 	hs = kzalloc(sizeof(struct msm_handset), GFP_KERNEL);
 	if (!hs)
@@ -811,7 +809,7 @@ static int __devinit hs_probe(struct platform_device *pdev)
 	ipdev->id.version	= 1;
 
 #ifdef CONFIG_ZTE_PLATFORM
-	input_set_capability(ipdev, EV_KEY, KEY_WAKEUP);//ZTE_HS_ZHENGCHAO_01
+	input_set_capability(ipdev, EV_KEY, KEY_WAKEUP);
 #endif
 	input_set_capability(ipdev, EV_KEY, KEY_MEDIA);
 	input_set_capability(ipdev, EV_KEY, KEY_VOLUMEUP);
@@ -834,8 +832,8 @@ static int __devinit hs_probe(struct platform_device *pdev)
 
 	platform_set_drvdata(pdev, hs);
 
-	/* ZTE_AUDIO_YXS_20111025, start */
-	#if 1 // def ZTE_FEATURE_HEADPHONE
+	/* start */
+	#if 1 
 	proc_hs_type = create_proc_read_entry("hs", S_IRUGO, NULL, hs_read, NULL);
 	if (!proc_hs_type) {
 		printk(KERN_ERR"[YXS]hs: unable to register '/proc/hs' \n");
@@ -843,7 +841,7 @@ static int __devinit hs_probe(struct platform_device *pdev)
 
 	INIT_DELAYED_WORK(&hs->hph_wq, input_report_hph_event);
 	#endif
-	/* ZTE_AUDIO_YXS_20111025, end */
+	/* end */
 
 	rc = hs_rpc_init();
 	if (rc) {
@@ -869,11 +867,11 @@ static int __devexit hs_remove(struct platform_device *pdev)
 {
 	struct msm_handset *hs = platform_get_drvdata(pdev);
 
-	/* ZTE_AUDIO_YXS_20111025, start */
-	#if 1 // def ZTE_FEATURE_HEADPHONE
+	/* start */
+	#if 1 
 	remove_proc_entry("hs", NULL);
 	#endif
-	/* ZTE_AUDIO_YXS_20111025, end */
+	/* end */
 
 	input_unregister_device(hs->ipdev);
 	switch_dev_unregister(&hs->sdev);

@@ -49,8 +49,8 @@
 #include <mach/msm_migrate_pages.h>
 #endif
 
-#if 0 //ZTE_XJB_PM_20120427  remove to NFC driver files.
-//#ifdef CONFIG_NFC_DEVICES //added by zhang.yu_1 for nfc restart before shut down @120218
+#if 0 // remove to NFC driver files.
+//#ifdef CONFIG_NFC_DEVICES //added for nfc restart before shut down @120218
 #include <linux/gpio.h>
 #endif
 
@@ -997,17 +997,17 @@ static int msm_pm_modem_busy(void)
 
 
 #ifdef CONFIG_ZTE_SUSPEND_WAKEUP_MONITOR
-/*ZTE_HYJ_WAKELOCK_TOOL 2010.0114 begin*/
+/* begin*/
 struct msm_pm_smem_t * get_msm_pm_smem_data(void)
 {
 	return msm_pm_smem_data;
 }
-/*ZTE_HYJ_WAKELOCK_TOOL 2010.0114 end*/
+/* end*/
 #endif
 
 #ifdef CONFIG_ZTE_PLATFORM
 
-#define ZTE_PM_DUMP_NOT_OKTS	//LHX_PM_20120211_01 while modem can't enter TCXO_SHUTDOWN,dump the not_okts clients, if clients include CLKREGIM,need to dump enabled clk.
+#define ZTE_PM_DUMP_NOT_OKTS	// while modem can't enter TCXO_SHUTDOWN,dump the not_okts clients, if clients include CLKREGIM,need to dump enabled clk.
 #ifdef ZTE_PM_DUMP_NOT_OKTS
 #define ZTE_PROC_COMM_CMD3_DUMP_NOT_OKTS 18		//proc command used to dump not_okts clients
 #define ZTE_PROC_COMM_CMD3_DUMP_NOT_OKTS_CLK 19	//proc command used to dump clk if not_okts clients include CLKREGIM
@@ -1049,8 +1049,8 @@ void zte_get_not_okts_proccomm(bool from_idle)		// false to dump when suspend,tr
 }
 
 #endif
-long lateresume_2_earlysuspend_time_s = 0;		//LHX_PM_20110411_01 time to record how long it takes to earlysuspend after last resume. namely,to record how long the LCD keeps on.
-void zte_update_lateresume_2_earlysuspend_time(bool resume_or_earlysuspend)	// LHX_PM_20110411_01 resume_or_earlysuspend? lateresume : earlysuspend
+long lateresume_2_earlysuspend_time_s = 0;		// time to record how long it takes to earlysuspend after last resume. namely,to record how long the LCD keeps on.
+void zte_update_lateresume_2_earlysuspend_time(bool resume_or_earlysuspend)	//  resume_or_earlysuspend? lateresume : earlysuspend
 {
 	if(resume_or_earlysuspend)//lateresume,need to record when the lcd is turned on
 	{
@@ -1119,8 +1119,8 @@ void record_sleep_awake_time(bool record_sleep_awake)
 	}
 
 }
-/*End LHX_PM_20110324_01 add code to record how long the APP sleeps or keeps awake*/
-extern void zte_need_2_prink_rpc_while_wakeup(void);	//ZTE_PM_JIANGFENG_20110429_01, start
+/*End  add code to record how long the APP sleeps or keeps awake*/
+extern void zte_need_2_prink_rpc_while_wakeup(void);	// start
 #endif
 
 /*
@@ -1293,8 +1293,8 @@ static int msm_pm_power_collapse
 #ifdef CONFIG_ZTE_PLATFORM
 		if((collapsed == 1)&&(!from_idle))
 		{
-			record_sleep_awake_time(true);//LHX_PM_20110324_01 add code to record how long the APP sleeps or keeps awake 
-		    zte_need_2_prink_rpc_while_wakeup();		//ZTE_PM_JIANGFENG_20110429_01, start
+			record_sleep_awake_time(true);// add code to record how long the APP sleeps or keeps awake 
+		    zte_need_2_prink_rpc_while_wakeup();		//, start
 		}
 #endif
 #ifdef CONFIG_ZTE_PLATFORM
@@ -1963,8 +1963,8 @@ static struct platform_suspend_ops msm_pm_ops = {
 
 static uint32_t restart_reason = 0x776655AA;
 
-#if 0 //ZTE_XJB_PM_20120427  remove to NFC driver files.
-//#ifdef CONFIG_NFC_DEVICES //added by zhang.yu_1 for nfc restart before shut down @120218
+#if 0 //  remove to NFC driver files.
+//#ifdef CONFIG_NFC_DEVICES //added for nfc restart before shut down @120218
 
 #ifdef CONFIG_PN544_NFC
 struct pn544_dev {
@@ -1997,8 +1997,8 @@ static void msm_pm_power_off(void)
 {
 	unsigned int subid=14;//zte
 	
-        #if 0 //ZTE_XJB_PM_20120427  remove to NFC driver files.
-	//#ifdef CONFIG_NFC_DEVICES //added by zhang.yu_1 for nfc reset before shut down @120218
+        #if 0 //  remove to NFC driver files.
+	//#ifdef CONFIG_NFC_DEVICES //added for nfc reset before shut down @120218
 
 	#ifdef CONFIG_PN544_NFC
 	gpio_set_value(pn544_dev->firm_gpio, 0);
@@ -2020,10 +2020,10 @@ static void msm_pm_power_off(void)
 #endif
 	
 	msm_rpcrouter_close();
-        printk("msm_pm_power_off, set pwrdwn flag\n");//zte
-	msm_proc_comm(PCOM_CUSTOMER_CMD3,0, &subid);//zte
+        printk("msm_pm_power_off, set pwrdwn flag\n");
+	msm_proc_comm(PCOM_CUSTOMER_CMD3,0, &subid);
 	msm_proc_comm(PCOM_POWER_DOWN, 0, 0);
-	printk("msm_pm_power_off, waiting POWEROFF\n");//zte
+	printk("msm_pm_power_off, waiting POWEROFF\n");
 	for (;;)
 		;
 }
@@ -2036,7 +2036,7 @@ static void msm_pm_restart(char str, const char *cmd)
 #endif
 
 	msm_rpcrouter_close();
-#ifdef CONFIG_ZTE_PLATFORM // faster reboot by PCOM_RESET_CHIP_IMM,ZTE_REBOOT_LIWEI_20110815
+#ifdef CONFIG_ZTE_PLATFORM // faster reboot by PCOM_RESET_CHIP_IMM,
 	msm_proc_comm(PCOM_RESET_CHIP_IMM, &restart_reason, 0);
 #else
 	msm_proc_comm(PCOM_RESET_CHIP, &restart_reason, 0);
@@ -2292,7 +2292,7 @@ static int __init msm_pm_init(void)
 }	
 #endif
 
-#ifdef CONFIG_ZTE_PLATFORM	/* chenchongbao.20111231 init it */
+#ifdef CONFIG_ZTE_PLATFORM	/* init it */
 	time_updated_when_sleep_awake = current_kernel_time();
 	lateresume_2_earlysuspend_time_s = time_updated_when_sleep_awake.tv_sec;
 #endif

@@ -120,7 +120,6 @@ struct android_usb_function {
 #define PRODUCT_ID_MODEM_MS                 			0x1355
 #define PRODUCT_ID_MS_CDROM                 			0x0083
 #define PRODUCT_ID_MS_CDROM_NOSWITCH                                     0x0360
-#define PRODUCT_ID_MS_CDROM_NOSWITCH_ADB                                     0x0359
 #define PRODUCT_ID_DIAG_NMEA_MODEM   					0x0111
 #define PRODUCT_ID_DIAG                           		0x0112	
 
@@ -2358,9 +2357,7 @@ static void clear_switch_flag(void)
 
 static int usb_cdrom_is_enable(void)
 {
-	return (PRODUCT_ID_MS_CDROM == current_pid() || 
-	PRODUCT_ID_MS_CDROM_NOSWITCH == current_pid()|| 
-	PRODUCT_ID_MS_CDROM_NOSWITCH_ADB == current_pid()) ? 1:0;
+	return (PRODUCT_ID_MS_CDROM == current_pid() || PRODUCT_ID_MS_CDROM_NOSWITCH == current_pid()) ? 1:0;
 }
 int os_switch_is_enable(void) /*switch_pid when linux*/
 {

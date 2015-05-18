@@ -182,7 +182,7 @@ static void packet_arrival_worker(struct work_struct *work)
 {
 	struct smd_pkt_dev *smd_pkt_devp;
 
-	#ifdef CONFIG_ZTE_PLATFORM		//LHX_PM_20120327 no wakelock temporarily,which will lead to fail to suspend
+	#ifdef CONFIG_ZTE_PLATFORM		// no wakelock temporarily,which will lead to fail to suspend
 	return;
 	#endif
 

@@ -416,8 +416,6 @@ struct msmsdcc_host {
 	bool sdcc_irq_disabled;
 	bool sdcc_suspended;
 	bool sdio_wakeupirq_disabled;
-//merged from 8960_ICS,20121221,yeganlin	
-	struct device_attribute	inserted;
 };
 
 int msmsdcc_set_pwrsave(struct mmc_host *mmc, int pwrsave);

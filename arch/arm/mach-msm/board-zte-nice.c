@@ -65,16 +65,16 @@
 #ifdef CONFIG_PN544_NFC
 #include <linux/nfc/pn544.h>
 #endif
-#ifdef CONFIG_TOUCHSCREEN_MXT224//ZTE_TS_XYM_20110808
+#ifdef CONFIG_TOUCHSCREEN_MXT224
 #include <linux/atmel_qt602240.h>
 extern struct atmel_i2c_platform_data atmel_data;
 #endif
 #ifdef CONFIG_TOUCHSCREEN_SYNAPTICS_RMI4_I2C
-#include <linux/input/synaptics_rmi4_i2c.h> //ZTE_TS_XYM_20110905
+#include <linux/input/synaptics_rmi4_i2c.h> 
 #endif
 #include <mach/camera.h>
 
-#ifdef CONFIG_ZTE_PLATFORM  //shuangdan merge log system
+#ifdef CONFIG_ZTE_PLATFORM  // merge log system
 #include <mach/zte_memlog.h>
 #include <linux/proc_fs.h>
 #endif
@@ -114,14 +114,14 @@ extern struct atmel_i2c_platform_data atmel_data;
 #define MSM_RAM_CONSOLE_SIZE  SZ_1M
 #endif
 //static smem_global *global;
-//ZTE_JIANGFENG_20101018_01, end
-//ZTE_BOOT_HUANGYANJUN_20110412_01, start
+// end
+// start
 static int g_zte_board_id_type;
-//ZTE_BOOT_HUANGYANJUN_20110412_01, end
-//ZTE_BOOT_HUANGYANJUN_20110412_01, start
+// end
+// start
 int get_zte_board_id_type(void);
 extern void sync_sysfs_board_id(int flag);
-//ZTE_BOOT_HUANGYANJUN_20110412_01, end
+// end
 #endif
 
 
@@ -152,7 +152,7 @@ static struct sx150x_platform_data sx150x_data[] __initdata = {
 #endif
 
 #ifdef CONFIG_ZTE_PLATFORM
-//compatible of qualcomm and broadcomm bluetooth chip     ZTE_BT_ZKD_2011.08.24 end
+//compatible of qualcomm and broadcomm bluetooth chip     end
 #define ATAG_ZTEFTM  0x5d53cd73
 static int g_zte_ftm_flag_fixup;
 
@@ -1134,14 +1134,14 @@ static int bcm_power(int on)
 	}
 	return 0;
 }
-//compatible of qualcomm and broadcomm bluetooth chip     ZTE_BT_ZKD_2011.08.24 end
+//compatible of qualcomm and broadcomm bluetooth chip      end
 
-//compatible of qualcomm and broadcomm bluetooth chip     ZTE_BT_QXX_20101207 begin
+//compatible of qualcomm and broadcomm bluetooth chip      begin
 static struct platform_device msm_bcm_power_device = {
 	.name = "bcm_power",
 };
 
-//compatible of qualcomm and broadcomm bluetooth chip     ZTE_BT_QXX_20101207 end
+//compatible of qualcomm and broadcomm bluetooth chip      end
 
 static struct resource bluesleep_resources[] = {
 	{
@@ -1222,17 +1222,17 @@ struct pn544_i2c_platform_data pn544_data={
 #endif
 #if defined(CONFIG_I2C) && defined(CONFIG_GPIO_SX150X)
 static struct i2c_board_info core_exp_i2c_info[] __initdata = {
-/* ZTE_TS_XYM_20110915 0x3e address conflict with focaltech touchsreen driver
+/*  0x3e address conflict with focaltech touchsreen driver
 	{
 		I2C_BOARD_INFO("sx1509q", 0x3e),
 	},
 */
-	//ZTE_ALSPRX_001 start
+	// start
 	{
 		.type         = "taos",
 		.addr         = 0x39,
 	},
-	//ZTE_ALSPRX_001 end
+	// end
 };
 
 #ifdef CONFIG_SENSORS_AKM8962C //used by Freesca;e && Kionix   
@@ -1417,7 +1417,7 @@ static int cap_ts_vkeys_init(void)
 #endif
 
 
-//#ifdef CONFIG_TOUCHSCREEN_SYNAPTICS_RMI4_I2C//ZTE_TS_XYM_20110905
+//#ifdef CONFIG_TOUCHSCREEN_SYNAPTICS_RMI4_I2C//
 //#define SYNAPTICS_I2C_RMI4_NAME "synaptics-rmi4-ts"
 //#define TS_I2C_ADDR		0x22
 #define GPIO_TS_IRQ		82
@@ -1459,7 +1459,7 @@ static struct synaptics_rmi4_data synaptics_ts_data = {
 #endif
 
 
-//ZTE_TS_XYM_20110808 begin
+// begin
 static struct i2c_board_info i2c_touch_devices[] = {
 /*
 #ifdef CONFIG_TOUCHSCREEN_SYNAPTICS_I2C_RMI
@@ -1495,7 +1495,7 @@ static struct i2c_board_info i2c_touch_devices[] = {
 #endif
 
 };
-//ZTE_TS_XYM_20110808 end
+// end
 #if defined(CONFIG_I2C) && defined(CONFIG_GPIO_SX150X)
 static void __init register_i2c_devices(void)
 {
@@ -1585,12 +1585,12 @@ static void gsbi_qup_i2c_gpio_config(int adap_id, int config_type)
 }
 
 static struct msm_i2c_platform_data msm_gsbi0_qup_i2c_pdata = {
-	.clk_freq		= 300000,//ZTE_NFC_SLF_20111011
+	.clk_freq		= 300000,
 	.msm_i2c_config_gpio	= gsbi_qup_i2c_gpio_config,
 };
 
 static struct msm_i2c_platform_data msm_gsbi1_qup_i2c_pdata = {
-	.clk_freq		= 300000,//ZTE_TS_XYM_20110921
+	.clk_freq		= 300000,
 	.msm_i2c_config_gpio	= gsbi_qup_i2c_gpio_config,
 };
 
@@ -2406,7 +2406,7 @@ static struct platform_device ram_console_device = {
 };
 #endif
 #endif
-#ifdef CONFIG_ZTE_PLATFORM //ZTE_TS_XYM_20110915 begin
+#ifdef CONFIG_ZTE_PLATFORM // begin
 static struct gpio_led android_led_list[] = {
 	{
 		.name = "button-backlight",
@@ -2426,7 +2426,7 @@ static struct platform_device android_leds = {
 		.platform_data = &android_leds_data,
 	},
 };
-#endif//ZTE_TS_XYM_20110915 end
+#endif// end
 
 static struct platform_device *surf_ffa_devices[] __initdata = {
 	&msm_device_dmov,
@@ -2482,7 +2482,7 @@ static struct platform_device *surf_ffa_devices[] __initdata = {
 #endif
 #endif  //end  config_bt
 #ifdef CONFIG_BCM_BT
-	&msm_bcm_power_device,  //compatible of qualcomm and broadcomm bluetooth chip     ZTE_BT_QXX_20101207
+	&msm_bcm_power_device,  //compatible of qualcomm and broadcomm bluetooth chip     
 	&msm_bcmsleep_device,
 #endif
 	&asoc_msm_pcm,
@@ -2495,7 +2495,7 @@ static struct platform_device *surf_ffa_devices[] __initdata = {
 #ifdef CONFIG_ANDROID_RAM_CONSOLE
 	&ram_console_device,
 #endif
-	&android_leds, //button-backlight  ZTE_TS_XYM_20110915
+	&android_leds, //button-backlight  
 #endif
 	
 };
@@ -2521,12 +2521,12 @@ static void __init msm_msm7x2x_allocate_memory_regions(void)
 	void *addr;
 	unsigned long size;
 #if defined(CONFIG_ZTE_PLATFORM) && defined(CONFIG_F3_LOG)
-  /* ZTE_F3LOG_YYM_0804 begin */
+  /*  begin */
       unsigned int len;
       smem_global *global_tmp = (smem_global *)(MSM_RAM_LOG_BASE + PAGE_SIZE) ;
   
       len = global_tmp->f3log;
-  /* ZTE_F3LOG_YYM_0804 end */
+  /*  end */
 #endif
 	
 	if (machine_is_msm7625a_surf() || machine_is_msm7625a_ffa())
@@ -2541,7 +2541,7 @@ static void __init msm_msm7x2x_allocate_memory_regions(void)
 	pr_info("allocating %lu bytes at %p (%lx physical) for fb\n",
 		size, addr, __pa(addr));
 #if defined(CONFIG_ZTE_PLATFORM) && defined(CONFIG_F3_LOG)
-/* ZTE_F3LOG_YYM_0804 begin */
+/*  begin */
 	pr_info("length = %d ++ \n", len);
 
 	if (len > 12)
@@ -2557,7 +2557,7 @@ static void __init msm_msm7x2x_allocate_memory_regions(void)
 
 	addr = phys_to_virt(MSM_SDLOG_RAM_PHYS);
 	pr_info("allocating %lu M at %p (%lx physical) for F3\n",size, addr, __pa(addr));
-/* ZTE_F3LOG_YYM_0804 end */
+/*  end */
 #endif 	
 }
 
@@ -3216,7 +3216,7 @@ EXPORT_SYMBOL(get_zte_board_id_type);
 
 #endif
 
-int wlan_init_power(void);	//ZTE_JHT_20120201 
+int wlan_init_power(void);	 
 
 static void __init msm7x2x_init(void)
 {
@@ -3324,7 +3324,7 @@ static void __init msm7x2x_init(void)
 			__func__, LED_GPIO_PDM);
 	else
 	{
-#ifndef CONFIG_ZTE_PLATFORM	//ZTE_TS_XYM_20110914
+#ifndef CONFIG_ZTE_PLATFORM	
 		platform_device_register(&led_pdev);
 #endif		
 	}

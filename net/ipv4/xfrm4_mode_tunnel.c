@@ -84,11 +84,9 @@ static int xfrm4_mode_tunnel_input(struct xfrm_state *x, struct sk_buff *skb)
 	if (!(x->props.flags & XFRM_STATE_NOECN))
 		ipip_ecn_decapsulate(skb);
 
-  if (skb->mac_header != NULL) { //added by ZTE_GUOYANWEN_RIL_20130206
-	 old_mac = skb_mac_header(skb);
-	 skb_set_mac_header(skb, -skb->mac_len);
-	 memmove(skb_mac_header(skb), old_mac, skb->mac_len);
-  }
+	old_mac = skb_mac_header(skb);
+	skb_set_mac_header(skb, -skb->mac_len);
+	memmove(skb_mac_header(skb), old_mac, skb->mac_len);
 	skb_reset_network_header(skb);
 	err = 0;
 

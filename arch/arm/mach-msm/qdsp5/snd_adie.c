@@ -459,7 +459,7 @@ static int __init snd_adie_init(void)
 	char name[sizeof "msm_snd_adie"];
 
 	snprintf(name, sizeof name, "msm_snd_adie");
-/* ZTE_Audio_CJ_110307, chenjun, 2011-03-07, start */
+/*  start */
 #if 0
 	dentry = debugfs_create_file(name, S_IFREG | S_IRUGO | S_IWUGO,
 			NULL, NULL, &snd_adie_debug_fops);
@@ -467,7 +467,7 @@ static int __init snd_adie_init(void)
 	dentry = debugfs_create_file(name, S_IFREG | 00644,
 			NULL, NULL, &snd_adie_debug_fops);
 #endif
-/* ZTE_Audio_CJ_110307, chenjun, 2011-03-07, end */
+/*  end */
 	if (IS_ERR(dentry))
 		MM_DBG("debugfs_create_file failed\n");
 #endif

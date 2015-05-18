@@ -28,6 +28,7 @@ Wenn               Wer          Was                                             
 #include <linux/i2c/taos_common.h>
 #include <linux/input.h>
 #include <linux/miscdevice.h>
+#include <linux/wakelock.h>
 
 #define TAOS_INT_GPIO 17
 #define TAOS_TAG        "[taos]"
@@ -129,6 +130,7 @@ static void taos_report_value(int mask);
 static int calc_distance(int value);
 static int enable_light_and_proximity(int mask);	
 static void taos_chip_diff_settings(void);
+static struct wake_lock taos_wake_lock;
 static int light_on=0;  
 static int prox_on = 0;
 
@@ -252,14 +254,17 @@ static u16 gain_trim_param = 100;
 static u16 gain_trim_param = 240;
 #elif defined(CONFIG_MACH_MOONCAKE2)
 static u16 gain_trim_param = 10;
-#elif defined(CONFIG_MACH_SEAN)
-static u16 gain_trim_param = 250;
 #else
 static u16 gain_trim_param = 25; //this value is set according to specific device
 #endif
 
+#if defined(CONFIG_MACH_ATLAS40)
+static u16 prox_threshold_hi_param = 600;
+static u16 prox_threshold_lo_param = 500;
+#else
 static u16 prox_threshold_hi_param = 1023; 
 static u16 prox_threshold_lo_param = 818;
+#endif
 static u8 prox_int_time_param = 0xF6;
 static u8 prox_adc_time_param = 0xFF;
 static u8 prox_wait_time_param = 0xFF;
@@ -330,7 +335,7 @@ struct prox_data TritonFN_prox_data[] = {
         { 3, 20, 16 },
         { 6, 18, 14 },
         { 10, 16,  16 },      
-        { 0,  15,   12 }
+        { 0,  0,   0 }
 };
 struct prox_data *prox_tablep = TritonFN_prox_data;
 
@@ -460,7 +465,7 @@ static void do_taos_work(struct work_struct *w)
 	 {           
          if(light_on&&(g_nlux>10000*(taos_cfgp->gain_trim)))
 		 {
-		     printk(KERN_CRIT "TAOS: porx(%d) > hi(%d) when als is %d\n",prox_cur_infop->prox_data,taos_cfgp->prox_threshold_hi,g_nlux);//如果看到这个打印在强光下频繁发生，可以考虑跳过下面的阈值设置和事件上报，但中断操作还要做，且这里可能中断过于频繁。也可以上报一个错误。  
+		     printk(KERN_CRIT "TAOS: porx(%d) > hi(%d) when als is %d\n",prox_cur_infop->prox_data,taos_cfgp->prox_threshold_hi,g_nlux);
 			 goto prox_in_sun;
 		 }
 		
@@ -582,6 +587,7 @@ static int __init taos_init(void) {
 		printk(KERN_ERR "TAOS: i2c_add_driver() failed in taos_init(),%d\n",ret);
                 return (ret);
 	}
+        wake_lock_init(&taos_wake_lock, WAKE_LOCK_SUSPEND, "taos");
     	//pr_crit(TAOS_TAG "%s:%d\n",__func__,ret);
         return (ret);
 }
@@ -1047,6 +1053,9 @@ static int enable_light_and_proximity(int mask)
                                 printk(KERN_ERR "TAOS: i2c_smbus_write_byte_data failed in ioctl prox_on\n");
                                 return (ret);
                 }
+                // Use wake lock to stop suspending during calls.
+                wake_lock(&taos_wake_lock);
+                pr_crit(TAOS_TAG "get wake lock");
 		return ret;
 	}	
 	if(mask==0x20)
@@ -1088,6 +1097,8 @@ static int enable_light_and_proximity(int mask)
                                 printk(KERN_ERR "TAOS: i2c_smbus_write_byte_data failed in ioctl prox_off\n");
                                 return (ret);
                 }
+                wake_unlock(&taos_wake_lock);
+                pr_crit(TAOS_TAG "release wake lock");
 		return ret;
 	}
 	return ret;
@@ -1297,7 +1308,6 @@ static long taos_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
 						mutex_unlock(&taos_datap->proximity_calibrating);			
                 	                return (ret);
                         		}					
-printk(KERN_ERR "TAOS: prox_calibrate %d\n" , prox_cal_info[i].prox_data);								
 					prox_sum += prox_cal_info[i].prox_data;
 					if (prox_cal_info[i].prox_data > prox_max)
 						prox_max = prox_cal_info[i].prox_data;
@@ -1309,11 +1319,8 @@ printk(KERN_ERR "TAOS: prox_calibrate %d\n" , prox_cal_info[i].prox_data);
 				ratio = 10*prox_mean/sat_prox;
 				
 				for (prox_pt = prox_tablep; prox_pt->ratio && prox_pt->ratio <= ratio; prox_pt++);
-        		if(!prox_pt->ratio){
-				    printk(KERN_ERR "TAOS: ioctl prox_calibrate failde : ratio = %d prox_mean = %d sat_prox = %d\n", ratio, prox_mean, sat_prox);
-					//mutex_unlock(&taos_datap->proximity_calibrating);
-                	//return -ERANGE;
-					}
+        		if(!prox_pt->ratio)
+                	return -1;
 					 
 				taos_cfgp->prox_threshold_hi = (prox_mean*prox_pt->hi)/10;
 				taos_cfgp->prox_threshold_lo = taos_cfgp->prox_threshold_hi*THRES_LO_TO_HI_RATIO;	
@@ -1581,17 +1588,14 @@ static int taos_prox_poll(struct taos_prox_info *prxp) {
                 }
                 chdata[i] = i2c_smbus_read_byte(taos_datap->client);
         }
-        prxp->prox_data = chdata[5];
-        prxp->prox_data <<= 8;
-        prxp->prox_data |= chdata[4];
-
         prxp->prox_clear = chdata[1];
         prxp->prox_clear <<= 8;
         prxp->prox_clear |= chdata[0];
-        if (prxp->prox_clear > ((sat_als*80)/100)){
-		    printk(KERN_ERR "TAOS: failed in taos_prox_poll() prxp->prox_clear = %d prxp->prox_data = %d\n", prxp->prox_clear, prxp->prox_data);
-            return -ENODATA;
-			}
+        if (prxp->prox_clear > ((sat_als*80)/100))
+                return -ENODATA;
+        prxp->prox_data = chdata[5];
+        prxp->prox_data <<= 8;
+        prxp->prox_data |= chdata[4];
 
 /*	prox_history_hi <<= 1; 
 	prox_history_hi |= ((prxp->prox_data > taos_cfgp->prox_threshold_hi)? 1:0);

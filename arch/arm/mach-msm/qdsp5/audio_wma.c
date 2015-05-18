@@ -1472,7 +1472,7 @@ static void audwma_post_event(struct audio *audio, int type,
 	wake_up(&audio->event_wait);
 }
 
-/* ZTE_CJ_CRDB00443050, chenjun, 2010-2-2, start */
+/* ,  start */
 static void audwma_suspend(struct early_suspend *h)
 {
 	struct audwma_suspend_ctl *ctl =
@@ -1494,7 +1494,7 @@ static void audwma_resume(struct early_suspend *h)
 	audwma_post_event(ctl->audio, AUDIO_EVENT_RESUME, payload);
 	resume_prevent_suspend();
 }
-/* ZTE_CJ_CRDB00443050, chenjun, 2010-2-2, end */
+/*  end */
 #endif
 
 #ifdef CONFIG_DEBUG_FS

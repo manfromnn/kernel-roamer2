@@ -46,7 +46,7 @@
 #include <mach/msm_smd.h>
 #include <mach/smem_log.h>
 #include <mach/subsystem_notif.h>
-#include <linux/hardirq.h>    //ZTE for in_atomic()
+#include <linux/hardirq.h>    
 #include "smd_rpcrouter.h"
 #include "modem_notifier.h"
 #include "smd_rpc_sym.h"
@@ -949,7 +949,7 @@ static void *rr_malloc(unsigned sz)
 {
 	void *ptr;
 	if (in_atomic()) {
-		//printk("wly: use GFP_ATOMIC\n");	//ZTE
+		//printk("wly: use GFP_ATOMIC\n");	
 		ptr = kmalloc(sz, GFP_ATOMIC);
 		if (ptr)
 			return ptr;
@@ -1805,7 +1805,7 @@ int msm_rpc_call_reply(struct msm_rpc_endpoint *ept, uint32_t proc,
 	req->procedure = cpu_to_be32(proc);
 
 	rc = msm_rpc_write(ept, req, request_size);
-	//printk(KERN_ERR"rpc_xbl:%s,%d,rc=%d \n",__FUNCTION__,__LINE__,rc);//ZTE
+	//printk(KERN_ERR"rpc_xbl:%s,%d,rc=%d \n",__FUNCTION__,__LINE__,rc);
 	if (rc < 0)
 		return rc;
 
@@ -1813,7 +1813,7 @@ int msm_rpc_call_reply(struct msm_rpc_endpoint *ept, uint32_t proc,
 		rc = msm_rpc_read(ept, (void*) &reply, -1, timeout);
 		if (rc < 0)
 		{
-			printk(KERN_ERR"rpc_xbl:%s,%d,rc=%d \n",__FUNCTION__,__LINE__,rc);//ZTE
+			printk(KERN_ERR"rpc_xbl:%s,%d,rc=%d \n",__FUNCTION__,__LINE__,rc);
 			return rc;
 		}
 		if (rc < (3 * sizeof(uint32_t))) {
@@ -1835,22 +1835,22 @@ int msm_rpc_call_reply(struct msm_rpc_endpoint *ept, uint32_t proc,
 		}
 		if (reply->reply_stat != 0) {
 			rc = -EPERM;
-			printk(KERN_ERR"rpc_xbl:%s,%d,rc=%d \n",__FUNCTION__,__LINE__,rc);//ZTE
+			printk(KERN_ERR"rpc_xbl:%s,%d,rc=%d \n",__FUNCTION__,__LINE__,rc);
 			break;
 		}
 		if (reply->data.acc_hdr.accept_stat != 0) {
 			rc = -EINVAL;
-			printk(KERN_ERR"rpc_xbl:%s,%d,rc=%d \n",__FUNCTION__,__LINE__,rc);//ZTE
+			printk(KERN_ERR"rpc_xbl:%s,%d,rc=%d \n",__FUNCTION__,__LINE__,rc);
 			break;
 		}
 		if (_reply == NULL) {
 			rc = 0;
-			printk(KERN_ERR"rpc_xbl:%s,%d,rc=%d \n",__FUNCTION__,__LINE__,rc);//ZTE
+			printk(KERN_ERR"rpc_xbl:%s,%d,rc=%d \n",__FUNCTION__,__LINE__,rc);
 			break;
 		}
 		if (rc > reply_size) {
 			rc = -ENOMEM;
-			printk(KERN_ERR"rpc_xbl:%s,%d,rc=%d \n",__FUNCTION__,__LINE__,rc);//ZTE
+			printk(KERN_ERR"rpc_xbl:%s,%d,rc=%d \n",__FUNCTION__,__LINE__,rc);
 		} else {
 			memcpy(_reply, reply, rc);
 		}
@@ -1858,7 +1858,7 @@ int msm_rpc_call_reply(struct msm_rpc_endpoint *ept, uint32_t proc,
 	}
 	kfree(reply);
 
-	//printk(KERN_ERR"rpc_xbl:%s,%d,rc=%d \n",__FUNCTION__,__LINE__,rc);//ZTE
+	//printk(KERN_ERR"rpc_xbl:%s,%d,rc=%d \n",__FUNCTION__,__LINE__,rc);
 	return rc;
 }
 EXPORT_SYMBOL(msm_rpc_call_reply);
@@ -1874,7 +1874,7 @@ static inline int ept_packet_available(struct msm_rpc_endpoint *ept)
 	return ret;
 }
 
-//ZTE_PM_JIANGFENG_20110429_01, start
+
 #ifdef CONFIG_ZTE_PLATFORM
 bool flag_need_2_prink_while_wakeup;
 void zte_need_2_prink_rpc_while_wakeup(void)
@@ -1882,7 +1882,7 @@ void zte_need_2_prink_rpc_while_wakeup(void)
 	flag_need_2_prink_while_wakeup = true;
 }
 #endif
-//ZTE_PM_JIANGFENG_20110429_01, end
+
 
 int __msm_rpc_read(struct msm_rpc_endpoint *ept,
 		   struct rr_fragment **frag_ret,
@@ -1977,7 +1977,7 @@ int __msm_rpc_read(struct msm_rpc_endpoint *ept,
 		reply->prog = rq->prog;
 		reply->vers = rq->vers;
 
-//ZTE_PM_JIANGFENG_20110429_01, start
+
 #ifdef CONFIG_ZTE_PLATFORM
 		if(flag_need_2_prink_while_wakeup)
 		{
@@ -1985,7 +1985,7 @@ int __msm_rpc_read(struct msm_rpc_endpoint *ept,
 			pr_info("LHX_RPC %s prog= 0x%08x proc= 0x%08x\n",__func__,be32_to_cpu(rq->prog),be32_to_cpu(rq->procedure));
 		}
 #endif
-//ZTE_PM_JIANGFENG_20110429_01, end
+
 
 		set_pend_reply(ept, reply);
 	}

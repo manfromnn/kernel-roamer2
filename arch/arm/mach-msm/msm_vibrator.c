@@ -14,10 +14,6 @@
  * GNU General Public License for more details.
  *
  */
-/*when           who    why   what
-20110715         zhangyu enable vibrator 
-20110818         yintianci fix the long time vibrating problem. ZTE_YTC_VIB_20110818
-*/
  
 #define DEBUG  0
  
@@ -87,7 +83,7 @@ static void set_pmic_vibrator(int on)
     msm_rpc_call(vib_endpoint, HTC_PROCEDURE_SET_VIB_ON_OFF, &req,
                  sizeof(req), 5 * HZ);
 	
-    if(on)//ZTE_YTC_VIB_20110818
+    if(on)
     {
         g_vibrator_status=1;
 #if DEBUG
@@ -133,7 +129,7 @@ static void pmic_vibrator_off(struct work_struct *work)
     {
         debug_print("Q:pmic_vibrator_off,start");	//chenchongbao.20111218
         set_pmic_vibrator(0);
-        debug_print("Q:pmic_vibrator_off,done\n"); //ZTE_VIB_LYJ_20110614
+        debug_print("Q:pmic_vibrator_off,done\n"); 
     }
     else
     {
@@ -164,16 +160,16 @@ static int timed_vibrator_off(struct timed_output_dev *sdev)
 static void vibrator_enable(struct timed_output_dev *dev, int value)
 {
     hrtimer_cancel(&vibe_timer);
-    cancel_work_sync(&work_vibrator_on);//ZTE_LYJ_VIB_20110615
-    cancel_work_sync(&work_vibrator_off);//ZTE_YTC_VIB_20110818
+    cancel_work_sync(&work_vibrator_on);
+    cancel_work_sync(&work_vibrator_off);
 
-    pr_info("vibrator_enable,%d ms,vibrator:%s now.\n",value,g_vibrator_status?"on":"off");		//chenchongbao.20111218
+    pr_info("vibrator_enable,%d ms,vibrator:%s now.\n",value,g_vibrator_status?"on":"off");		
 
     if (value == 0)
     {
         if(!timed_vibrator_off(dev))//if queue failed, delay 10ms try again by timer
         {
-        	   pr_info("vibrator_enable, queue failed!\n");	//chenchongbao.20111218
+        	   pr_info("vibrator_enable, queue failed!\n");	
             value=10;
             hrtimer_start(&vibe_timer,
                           ktime_set(value / 1000, (value % 1000) * 1000000),
@@ -209,9 +205,9 @@ static enum hrtimer_restart vibrator_timer_func(struct hrtimer *timer)
 {
     int value=0;
     debug_print("timer:vibrator timeout!\n");
-    if(!timed_vibrator_off(NULL))//if queue failed, delay 500ms try again by timer ZTE_YTC_VIB_20110818
+    if(!timed_vibrator_off(NULL))//if queue failed, delay 500ms try again by timer 
     {
-        pr_info("timer:vibrator timeout queue failed!\n");	//chenchongbao.20111218
+        pr_info("timer:vibrator timeout queue failed!\n");	
         value=500;
         hrtimer_start(&vibe_timer,
                       ktime_set(value / 1000, (value % 1000) * 1000000),

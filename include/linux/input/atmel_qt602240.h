@@ -2,7 +2,9 @@
 #define _LINUX_ATMEL_H
 
 #define ATMEL_QT602240_NAME "atmel_qt602240"
-
+#if defined(CONFIG_MACH_BLADE2)
+#define CONFIG_TS_NOTIFIER    //huangjinyu add 20110720
+#endif
 #define RESERVED_T0                               0u
 #define RESERVED_T1                               1u
 #define DEBUG_DELTAS_T2                           2u

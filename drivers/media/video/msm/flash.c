@@ -363,23 +363,6 @@ err1:
 	return rc;
 }
 #endif
-
-//add by lijing for gpio flash 20120607
-#if 1
-void  msm_camera_set_flash_torch_mode(int32_t times)
-{
-	int level;
-	pr_err("lijing:set flash times=%d\n",times);
-	for(level = 0;level < times;level++)
-	{
-		gpio_set_value(MSM_CAMERA_FLASH_LED_GPIO, 1);
-		udelay(2);
-		gpio_set_value(MSM_CAMERA_FLASH_LED_GPIO, 0);
-		udelay(2);
-	}
-	gpio_set_value(MSM_CAMERA_FLASH_LED_GPIO, 1);
-}
-#endif
 /*
  * Refer to MSM_CAM_IOCTL_FLASH_LED_CFG used by mm-camera in user space
  * flash_led_enable is set in apps's menu item selected by user
@@ -403,12 +386,9 @@ int32_t msm_camera_flash_set_led_state(struct msm_camera_sensor_flash_data *fdat
     {
         case MSM_CAMERA_LED_OFF:
             flash_led_enable = 0;
-	    msm_camera_flash_led_disable();
             break;
 
         case MSM_CAMERA_LED_LOW:
-		msm_camera_set_flash_torch_mode(13);
-		break;
         case MSM_CAMERA_LED_HIGH:
             /*
                * MSM_CAMERA_LED_LOW is as same as MSM_CAMERA_LED_HIGH

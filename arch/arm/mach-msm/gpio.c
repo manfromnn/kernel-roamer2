@@ -671,7 +671,7 @@ static struct platform_driver msm_gpio_driver = {
 };
 #if defined(CONFIG_DEBUG_FS)
 
-#define ZTE_PLATFORM_CONFIGURE_GPIO_SYS  //LHX_GPIO_20110504_01 configure GPIO as output low/high or get GPIO's state
+#define ZTE_PLATFORM_CONFIGURE_GPIO_SYS  // configure GPIO as output low/high or get GPIO's state
 #ifdef	ZTE_PLATFORM_CONFIGURE_GPIO_SYS
 static int zte_gpio_output_result = 0;
 static int gpio_num_to_get = 0;

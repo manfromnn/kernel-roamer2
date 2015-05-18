@@ -1329,7 +1329,7 @@ static void audevrc_post_event(struct audio *audio, int type,
 	wake_up(&audio->event_wait);
 }
 
-/* ZTE_CJ_CRDB00443050, chenjun, 2010-2-2, start */
+/*  start */
 static void audevrc_suspend(struct early_suspend *h)
 {
 	struct audevrc_suspend_ctl *ctl =
@@ -1351,7 +1351,7 @@ static void audevrc_resume(struct early_suspend *h)
 	audevrc_post_event(ctl->audio, AUDIO_EVENT_RESUME, payload);
 	resume_prevent_suspend();
 }
-/* ZTE_CJ_CRDB00443050, chenjun, 2010-2-2, end */
+/*  end */
 #endif
 
 #ifdef CONFIG_DEBUG_FS

@@ -49,11 +49,6 @@
 #if defined (CONFIG_TOUCHSCREEN_FOCALTECH_USBNOTIFY)
 extern int focaltech_ts_notifier_call_chain(unsigned long val);
 #endif
-#if defined (CONFIG_ATMEL_TS_NOTIFIER)
-extern int atmel_usb_detect;
-//extern int atmel_ts_notifier_call_chain(unsigned long val);
-#endif
-
 //void schedule_usb_plug(void); /*wangzy*/
 static const char driver_name[] = "msm72k_udc";
 
@@ -1596,11 +1591,6 @@ static void usb_do_work(struct work_struct *w)
 #if defined (CONFIG_TOUCHSCREEN_FOCALTECH_USBNOTIFY)
 				focaltech_ts_notifier_call_chain(1);
 #endif
-#if defined (CONFIG_ATMEL_TS_NOTIFIER)
-				//atmel_ts_notifier_call_chain(1);	
-				atmel_usb_detect=1;
-#endif
-
 				usb_reset(ui);
 				ret = request_irq(otg->irq, usb_interrupt,
 							IRQF_SHARED,
@@ -1648,13 +1638,8 @@ static void usb_do_work(struct work_struct *w)
 
 				dev_info(&ui->pdev->dev,
 					"msm72k_udc: ONLINE -> OFFLINE\n");
-				
 #if defined(CONFIG_TOUCHSCREEN_FOCALTECH_USBNOTIFY)
 				focaltech_ts_notifier_call_chain(0);
-#endif
-#if defined (CONFIG_ATMEL_TS_NOTIFIER)
-				//atmel_ts_notifier_call_chain(0);
-				atmel_usb_detect=0;
 #endif
 
 				atomic_set(&ui->running, 0);
@@ -1763,14 +1748,10 @@ static void usb_do_work(struct work_struct *w)
 				pm_runtime_resume(&ui->pdev->dev);
 				dev_dbg(&ui->pdev->dev,
 					"msm72k_udc: OFFLINE -> ONLINE\n");
+
 #if defined(CONFIG_TOUCHSCREEN_FOCALTECH_USBNOTIFY)
 				focaltech_ts_notifier_call_chain(1);
 #endif
-#if defined (CONFIG_ATMEL_TS_NOTIFIER)
-				//atmel_ts_notifier_call_chain(1);
-				atmel_usb_detect=1;
-#endif
-
 				usb_reset(ui);
 				ui->state = USB_STATE_ONLINE;
 				usb_do_work_check_vbus(ui);

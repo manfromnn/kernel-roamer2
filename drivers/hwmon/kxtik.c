@@ -513,8 +513,7 @@ static int __devinit kxtik_verify(struct kxtik_data *tik)
 	if (retval < 0)
 		dev_err(&tik->client->dev, "error reading WHO_AM_I register!\n");
 	else
-		retval = ( retval == 0x11 || retval == 0x05)? 0: -EIO ;
-		//retval = retval != 0x05 ? -EIO : 0;  cjn modify
+		retval = retval != 0x05 ? -EIO : 0;
 
 	return retval;
 }

@@ -316,15 +316,6 @@ static char *battery_lvl[] = {
 
 #endif
 
-//xiayc
-extern int get_charge_status(void);
-int get_charge_status()
-{
-	return msm_batt_info.batt_status;
-}
-
-EXPORT_SYMBOL(get_charge_status);
-
 static int msm_power_get_property(struct power_supply *psy,
 				  enum power_supply_property psp,
 				  union power_supply_propval *val)

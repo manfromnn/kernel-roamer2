@@ -33,7 +33,7 @@
 #include <linux/input.h>
 
 #define CY_SPI_NAME "cyttsp-spi"
-#define CY_I2C_NAME "cysp-touchscreen"
+#define CY_I2C_NAME "cyttsp-i2c"
 /* Scan Type selection for finger and/or stylus activation */
 #define CY_SCN_TYP_DFLT 0x01 /* finger only mutual scan */
 /* Active Power state scanning/processing refresh interval */

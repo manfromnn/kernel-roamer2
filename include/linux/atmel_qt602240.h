@@ -2,7 +2,9 @@
 #define _LINUX_ATMEL_H
 
 #define ATMEL_QT602240_NAME "atmel_qt602240"
-
+#if defined(CONFIG_MACH_BLADE2)
+#define CONFIG_TS_NOTIFIER    //huangjinyu add 20110720
+#endif
 #define RESERVED_T0                               0u
 #define RESERVED_T1                               1u
 #define DEBUG_DELTAS_T2                           2u
@@ -98,7 +100,7 @@ struct atmel_i2c_platform_data {
 	int8_t config_T25[14];
 	int8_t config_T27[7];
 	int8_t config_T28[6];
-#ifdef CONFIG_ATMEL_TS_NOTIFIER
+#ifdef CONFIG_TS_NOTIFIER
 	int8_t config_T9_charge[4];
 	int8_t config_T28_charge[2];
 #endif
@@ -122,7 +124,7 @@ struct atmel_config_data {
 	int8_t *config_T9;
 	int8_t *config_T22;
 	int8_t *config_T28;
-#ifdef CONFIG_ATMEL_TS_NOTIFIER
+#ifdef CONFIG_TS_NOTIFIER
 	int8_t *config_T9_charge;	
 	int8_t *config_T28_charge;
 #endif

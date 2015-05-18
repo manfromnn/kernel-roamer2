@@ -21,9 +21,9 @@
 
 #include <mach/pmic.h>
 
-//ZTE_JHT_20120518 for advanced ZTE wifi custom+++
+// for advanced ZTE wifi custom+++
 #include <linux/proc_fs.h>
-//ZTE_JHT_20120518 for advanced ZTE wifi custom---
+// for advanced ZTE wifi custom---
 
 
 static void zte_wifi_create_random_MAC(unsigned char *ptr_mac)
@@ -405,7 +405,7 @@ static int __init zte_wifi_init(void)
 		gpio_direction_output(WLAN_CHIP_PWD_PIN, 0);
 		gpio_free(WLAN_CHIP_PWD_PIN);
 		
-		platform_device_register(&zte_wifi_device);	//ZTE_JHT_20120201
+		platform_device_register(&zte_wifi_device);	
 		
 		return 0;
 
@@ -415,7 +415,7 @@ static int __init zte_wifi_init(void)
 }
 #endif
 
-//ZTE_JHT_20120518 for advanced ZTE wifi custom+++
+// for advanced ZTE wifi custom+++
 static int common_read_proc(
 char *page, char **start, off_t off, int count, int *eof, void *data, char *inputbuf , int inputlen )
 {
@@ -461,11 +461,11 @@ char *page, char **start, off_t off, int count, int *eof, void *data)
 	return common_read_proc(page, start, off, count, eof, data, mac_formated, len);	
  
 }
-//ZTE_JHT_20120518 for advanced ZTE wifi custom---
+// for advanced ZTE wifi custom---
 
 int wlan_init_power(void)
 {
-//ZTE_JHT_20120518 for advanced ZTE wifi custom+++
+// for advanced ZTE wifi custom+++
 	struct proc_dir_entry * d_entry;
 
 	d_entry = create_proc_entry("WIFI_MAC_ADDR", 0, NULL);
@@ -476,7 +476,7 @@ int wlan_init_power(void)
 		d_entry->data = NULL;
 	}
 
-//ZTE_JHT_20120518 for advanced ZTE wifi custom---
+// for advanced ZTE wifi custom---
 
 	return zte_wifi_init();
 }

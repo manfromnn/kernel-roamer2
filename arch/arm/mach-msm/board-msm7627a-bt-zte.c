@@ -1016,14 +1016,14 @@ static int bcm_power(int on)
 	}
 	return 0;
 }
-//compatible of qualcomm and broadcomm bluetooth chip     ZTE_BT_ZKD_2011.08.24 end
+//compatible of qualcomm and broadcomm bluetooth chip     
 
-//compatible of qualcomm and broadcomm bluetooth chip     ZTE_BT_QXX_20101207 begin
+//compatible of qualcomm and broadcomm bluetooth chip     
  struct platform_device msm_bcm_power_device = {
 	.name = "bcm_power",
 };
 
-//compatible of qualcomm and broadcomm bluetooth chip     ZTE_BT_QXX_20101207 end
+//compatible of qualcomm and broadcomm bluetooth chip     
 
   struct resource bluesleep_resources[] = {
 	{

@@ -137,12 +137,9 @@ static ssize_t sensorinfo_show_name(struct sys_device *dev,
        case SENSOR_INFO_0X5CA_MODEL_ID:
             sprintf(sensor_name, "S5K5CAGX-3.0Mp-AF");
             break;
-	 	case SENSOR_INFO_OV7692_MODEL_ID:
+	 case SENSOR_INFO_OV7692_MODEL_ID:
             sprintf(sensor_name, "OV7692-0.3Mp-FF");
-            break;
-    	case SENSOR_INFO_OV2675_MODEL_ID:
-            sprintf(sensor_name, "OV2675-2.0Mp-FF");
-            break;
+            break;		
         default:
             sprintf(sensor_name, "No sensor or error ID!");
             break;

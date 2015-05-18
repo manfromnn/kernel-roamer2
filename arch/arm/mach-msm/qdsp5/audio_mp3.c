@@ -2019,7 +2019,7 @@ static void audmp3_post_event(struct audio *audio, int type,
 }
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
-/* ZTE_CJ_CRDB00443050, chenjun, 2010-2-2, start */
+/* 2010-2-2, start */
 static void audmp3_suspend(struct early_suspend *h)
 {
 	struct audmp3_suspend_ctl *ctl =
@@ -2041,7 +2041,7 @@ static void audmp3_resume(struct early_suspend *h)
 	audmp3_post_event(ctl->audio, AUDIO_EVENT_RESUME, payload);
 	resume_prevent_suspend();
 }
-/* ZTE_CJ_CRDB00443050, chenjun, 2010-2-2, end */
+/* 2010-2-2, end */
 #endif
 
 #ifdef CONFIG_DEBUG_FS

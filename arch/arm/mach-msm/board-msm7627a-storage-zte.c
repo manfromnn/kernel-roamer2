@@ -326,6 +326,7 @@ static struct mmc_platform_data sdc2_plat_data = {
 	 * they can operate at 1.8V supply.
 	 */
 	.ocr_mask	= MMC_VDD_28_29 | MMC_VDD_165_195,
+	.translate_vdd  = msm_sdcc_setup_power,
 	.mmc_bus_width  = MMC_CAP_4_BIT_DATA,
 #ifdef CONFIG_MMC_MSM_SDIO_SUPPORT
 #ifdef CONFIG_ATH_WIFI
@@ -429,14 +430,6 @@ void __init msm7627a_init_mmc(void)
 	if (mmc_regulator_init(2, "mmc", 2850000))
 		return;
 	msm_add_sdcc(2, &sdc2_plat_data);
-	
-	if (!sdc2_plat_data.translate_vdd) {
-		pr_err("%s: sdc2_plat_data.translate_vdd is null\n",
-				__func__);
-	} else {
-		pr_err("%s: sdc2_plat_data.translate_vdd is not null\n",
-				__func__);
-	}
 #endif
 	/* Not Used */
 #if (defined(CONFIG_MMC_MSM_SDC4_SUPPORT)\

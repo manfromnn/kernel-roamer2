@@ -21,11 +21,7 @@
 #ifndef __KXTIK_H__
 #define __KXTIK_H__
 
-#ifdef CONFIG_SENSORS_KXTIK_NEW_ADDR
-#define KXTIK_I2C_ADDR		0x0E
-#else 
 #define KXTIK_I2C_ADDR		0x0F
-#endif
 
 struct kxtik_platform_data {
 	unsigned int min_interval;	/* minimum poll interval (in milli-seconds) */

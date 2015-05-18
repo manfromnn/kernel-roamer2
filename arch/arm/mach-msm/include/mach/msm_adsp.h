@@ -45,10 +45,10 @@ int32_t get_adsp_resource(unsigned short client_idx,
 				void *cmd_buf, size_t cmd_size);
 int32_t put_adsp_resource(unsigned short client_idx,
 				void *cmd_buf, size_t cmd_size);
-/* ZTE_CJ_CRDB00443050, chenjun, 2010-2-2, start */
+/*   start */
 void resume_prevent_suspend(void);
 void suspend_allow_suspend(void);
-/* ZTE_CJ_CRDB00443050, chenjun, 2010-2-2, end */
+/*  end */
 /* Write is safe to call from interrupt context.
  */
 int msm_adsp_write(struct msm_adsp_module *module,

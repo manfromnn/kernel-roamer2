@@ -52,10 +52,10 @@ static void msm_map_io(struct map_desc *io_desc, int size)
 		if (io_desc[i].virtual == (unsigned long)MSM_SHARED_RAM_BASE)
 			io_desc[i].pfn = __phys_to_pfn(msm_shared_ram_phys);
 #if defined(CONFIG_ZTE_PLATFORM) && defined(CONFIG_F3_LOG)
-/* ZTE_F3LOG_YYM_0804 begin */
+/*  begin */
 		if (io_desc[i].virtual == (unsigned long)MSM_RAM_LOG_BASE)
 			io_desc[i].pfn = __phys_to_pfn(MSM_SMEM_RAM_PHYS);
-/* ZTE_F3LOG_YYM_0804 end */
+/*  end */
 #endif			
 	}
 	iotable_init(io_desc, size);
@@ -90,13 +90,13 @@ static struct map_desc msm_io_desc[] __initdata = {
 		.type =     MT_DEVICE,
 	},
 #if defined(CONFIG_ZTE_PLATFORM) && defined(CONFIG_F3_LOG)
-/* ZTE_F3LOG_YYM_0804 begin */
+/*  begin */
 	{
 		.virtual =  (unsigned long) MSM_RAM_LOG_BASE,
 		.length =   MSM_RAM_LOG_SIZE,
 		.type =     MT_DEVICE,
 	},
-/* ZTE_F3LOG_YYM_0804 end */
+/*  end */
 #endif	
 };
 

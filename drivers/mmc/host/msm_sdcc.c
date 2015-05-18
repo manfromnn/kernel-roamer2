@@ -4037,21 +4037,6 @@ show_polling(struct device *dev, struct device_attribute *attr, char *buf)
 	return snprintf(buf, PAGE_SIZE, "%d\n", poll);
 }
 
-//merged from 8960_ICS,20121221,yeganlin
-static ssize_t
-show_inserted(struct device *dev, struct device_attribute *attr, char *buf)
-{
-	struct mmc_host *mmc = dev_get_drvdata(dev);
-	struct msmsdcc_host *host = mmc_priv(mmc);
-	int inserted;
-	unsigned long flags;
-
-	spin_lock_irqsave(&host->lock, flags);
-	inserted = mmc->inserted;
-	spin_unlock_irqrestore(&host->lock, flags);
-
-	return snprintf(buf, PAGE_SIZE, "%d\n", inserted);
-}
 static ssize_t
 set_polling(struct device *dev, struct device_attribute *attr,
 		const char *buf, size_t count)
@@ -4962,19 +4947,6 @@ msmsdcc_probe(struct platform_device *pdev)
 	//ruanmeisi_20100618
 	create_mmc_work_queue(host);
 	//end
-//merged from 8960_ICS,20121221,yeganlin
-		//jzq add  for test
-	if (host->pdev_id == 1) {
-		host->inserted.show =show_inserted;
-		host->inserted.store =NULL;
-		sysfs_attr_init(&host->inserted.attr);
-		host->inserted.attr.name = "inserted";
-		host->inserted.attr.mode = S_IRUGO | S_IWUSR;
-		ret = device_create_file(&pdev->dev, &host->inserted);
-		if (ret)
-			goto platform_irq_free;
-		}
-	//jzq add  for end   
 	return 0;
 
  platform_irq_free:
@@ -5061,11 +5033,6 @@ static int msmsdcc_remove(struct platform_device *pdev)
 
 	if (!plat->status_irq)
 		sysfs_remove_group(&pdev->dev.kobj, &dev_attr_grp);
-//merged from 8960_ICS,20121221,yeganlin 
-       //jzq add for test begin
-	if (host->pdev_id==1)
-		device_remove_file(&pdev->dev, &host->inserted);
-	 //jzq add for test end
 
 	del_timer_sync(&host->req_tout_timer);
 	tasklet_kill(&host->dma_tlet);
